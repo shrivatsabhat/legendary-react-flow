@@ -17,14 +17,19 @@ export const OrgChartNode = async () => {
   const nodes = [];
   const edges = [];
 
-  [data?.departments[1]]?.forEach((department, index) => {
+  // [data?.departments[7]]
+  [data?.departments[4], data?.departments[3]]
+  // [data?.departments[7], data?.departments[1], data?.departments[2]]
+  // data?.departments
+  ?.forEach((department, index) => {
     // Add department node
     const deptNodeId = `dept-${department.id}`;
     nodes.push({
       id: deptNodeId,
       type: 'input',
       data: { label: `department:${department.name}` },
-      position: { x: 0, y: index * 100 },
+      position: { x: index * 300, y: 0 * 100 },
+      // position: { x: 0, y: 0 },
     });
 
     department.teams?.forEach((team, teamIndex) => {
@@ -36,6 +41,7 @@ export const OrgChartNode = async () => {
         type: 'position-logger2',
         data: { label: `team:${team.name}` },
         position: { x: index * 200 + teamIndex * 200, y: 100},
+        // position: { x: 0, y: 0 },
       });
 
       // Connect team to department
@@ -43,7 +49,7 @@ export const OrgChartNode = async () => {
         id: `edge-${deptNodeId}-${teamNodeId}`,
         source: deptNodeId,
         target: teamNodeId,
-        type:ConnectionLineType.SimpleBezier
+        type: ConnectionLineType.SmoothStep
       });
 
       team.participants?.forEach((participant, participantIndex) => {
@@ -53,9 +59,11 @@ export const OrgChartNode = async () => {
           id: participantNodeId,
           // type: 'default',
           type: 'position-logger',
-          data: { label: `participant:${participant.first_name} ${participant.last_name}` , role:'participant'},
+          data: { label: `participant:${participant.first_name} ${participant.last_name}`, role: 'participant' },
           // position: { x: 200 * 2, y: index * 700 },
           position: { x: index * 200 + teamIndex * 200 + 50, y:  100 + 100 + participantIndex * 100 },
+          // position: { x: 0, y: 0 },
+
         });
 
         // Connect participant to team
@@ -63,7 +71,7 @@ export const OrgChartNode = async () => {
           id: `edge-${teamNodeId}-${participantNodeId}`,
           source: teamNodeId,
           target: participantNodeId,
-        type:ConnectionLineType.Bezier
+          type: ConnectionLineType.SimpleBezier
 
         });
       });
@@ -100,6 +108,6 @@ export const OrgChartNode = async () => {
     //   { id: 'a->c', source: String(chartInfo.id), target: 'c', animated: false },
 
     // ]
-   
+
   };
 }
